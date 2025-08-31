@@ -24,7 +24,6 @@ golang
 # Text Editors & IDEs
 vim
 emacs
-code
 
 # Shell & Terminal Tools
 zsh
@@ -53,6 +52,7 @@ postgresql-server
 
 # Graphics & Media
 gimp
+alsa-lib-devel
 
 # System Utilities
 baobab
@@ -63,3 +63,8 @@ syncthing
 
 # Programming Languages
 clisp
+
+# X11
+libX11-devel
+libXinerama-devel
+libXft-devel
