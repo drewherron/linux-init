@@ -64,9 +64,10 @@ setup_keys() {
     # Copy GPG keys if directory exists
     if [ -d "$SCRIPT_DIR/secrets/.gnupg" ]; then
         echo "Copying GPG configuration..."
-        cp -r "$SCRIPT_DIR/secrets/.gnupg" "$HOME/"
-        chmod 700 "$HOME/.gnupg"
-        chmod 600 "$HOME/.gnupg/"*
+        sudo cp -r "$SCRIPT_DIR/secrets/.gnupg" "$HOME/"
+	sudo chown -R "$USER:$USER" "$HOME/.gnupg"
+	find "$HOME/.gnupg" -type f -exec chmod 600 {} \; 2>/dev/null || true
+	find "$HOME/.gnupg" -type d -exec chmod 700 {} \; 2>/dev/null || true
         echo "✓ GPG keys copied"
     else
         echo "No GPG keys found in secrets/.gnupg/ (optional)"
