@@ -21,7 +21,7 @@ install_packages() {
         echo "No packages to install. Please check $PKG_FILE."
     else
         # Install them
-        sudo dnf install -y $PACKAGES
+        sudo dnf install -y --skip-unavailable $PACKAGES
     fi
 
     # Clean up unwanted packages after installation
@@ -38,11 +38,11 @@ cleanup_unwanted() {
     local to_remove=()
     local unwanted_packages=(
         "firefox"
-        "gnome-shell"
-        "gnome-session"
-        "mutter"
-        "orca"
-        "brltty"
+#        "gnome-shell"
+#        "gnome-session"
+#        "mutter"
+#        "orca"
+#        "brltty"
     )
 
     for package in "${unwanted_packages[@]}"; do
@@ -80,5 +80,5 @@ install_external_packages() {
     # Source and run the external install script
     echo "Running external package installation..."
     source "$external_script"
-    run_external_installations
+    setup_external_packages
 }
