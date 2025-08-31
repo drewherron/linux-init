@@ -11,70 +11,80 @@ setup_dotfiles() {
 
     cd ~/dotfiles
 
-    # List of dotfiles directories to stow
-    local dotfiles_to_stow=(
-        "bash"
-        "bin"
-        "dwm"
-        "face"
-        "git"
-        "lf"
-        "lightline"
-        "mpv"
-        "profile"
-        "screenlayout"
-        "syncthing"
-        "vim"
-        "wallpaper"
-        "xdefaults"
-        "xresources"
-        "zathura"
-        "zsh"
-    )
+    read -p "Stow dotfiles now? (y/N): " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        # List of dotfiles directories to stow
+        local dotfiles_to_stow=(
+            "bash"
+            "bin"
+            "dwm"
+            "face"
+            "git"
+            "lf"
+            "lightline"
+            "mpv"
+            "profile"
+            "screenlayout"
+            "syncthing"
+            "vim"
+            "wallpaper"
+            "xdefaults"
+            "xresources"
+            "zathura"
+            "zsh"
+        )
 
-    # Directories that need --no-folding
-    local no_folding_dirs=(
-        "dwm"
-        "lf"
-        "vim"
-        "zsh"
-        "syncthing"
-        "lightline"
-    )
+        # Directories that need --no-folding
+        local no_folding_dirs=(
+            "dwm"
+            "lf"
+            "vim"
+            "zsh"
+            "syncthing"
+            "lightline"
+        )
 
-    # Create backup directory for existing files
-    local backup_dir="$HOME/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
+        # Create backup directory for existing files
+        local backup_dir="$HOME/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 
-    # Stow each dotfile, backing up conflicts
-    for dir in "${dotfiles_to_stow[@]}"; do
-        if [ -d "$dir" ]; then
-            echo "Processing $dir..."
+        # Stow each dotfile, backing up conflicts
+        for dir in "${dotfiles_to_stow[@]}"; do
+            if [ -d "$dir" ]; then
+                echo "Processing $dir..."
 
-            # Find all files and directories that would be created by this stow directory
-            # and backup any existing ones that aren't already symlinks
-            while IFS= read -r -d '' item; do
-                local relative_path="${item#$dir/}"
-                local target_path="$HOME/$relative_path"
-                if [ -e "$target_path" ] && [ ! -L "$target_path" ]; then
-                    echo "Backing up existing $relative_path..."
-                    # Ensure the parent directory in the backup location exists
-                    mkdir -p "$backup_dir/$(dirname "$relative_path")"
-                    # Move the file or directory to the backup location
-                    mv "$target_path" "$backup_dir/$relative_path"
+                # Get list of files that would be created by stow
+                files_to_stow=$(stow -n "$dir" 2>&1 | grep 'LINK: ' | sed 's/LINK: //; s/ => .*//')
+
+                for file in $files_to_stow; do
+                    local target_path="$HOME/$file"
+                    # If target exists and is not already a symlink, back it up
+                    if [ -e "$target_path" ] && [ ! -L "$target_path" ]; then
+                        echo "Backing up existing $file..."
+                        # Ensure backup directory exists
+                        if [ ! -d "$backup_dir" ]; then
+                            mkdir -p "$backup_dir"
+                        fi
+                        # Preserve directory structure in backup
+                        mkdir -p "$backup_dir/$(dirname "$file")"
+                        mv "$target_path" "$backup_dir/$file"
+                    fi
+                done
+
+                echo "Stowing $dir..."
+                if [[ " ${no_folding_dirs[*]} " =~ " $dir " ]]; then
+                    stow --no-folding "$dir"
+                else
+                    stow "$dir"
                 fi
-            done < <(find "$dir" -mindepth 1 -print0)
-
-            echo "Stowing $dir..."
-            if [[ " ${no_folding_dirs[*]} " =~ " $dir " ]]; then
-                stow --no-folding "$dir"
-            else
-                stow "$dir"
             fi
-        fi
-    done
+        done
 
-    if [ -d "$backup_dir" ]; then
-        echo "✓ Original files backed up to: $backup_dir"
+        if [ -d "$backup_dir" ]; then
+            echo "✓ Original files backed up to: $backup_dir"
+        fi
+    else
+        echo "Skipping dotfiles stow. You can run it manually later."
     fi
 
     # Copy specific scripts to ~/.local/bin/
@@ -85,11 +95,13 @@ setup_dotfiles() {
     fi
 
     # Special handling for lightdm (stow + run script)
-    if [ -d "lightdm" ] && [ ! -e "$HOME/.lightdm" ]; then
-        echo "Setting up lightdm..."
-        stow lightdm
-        cd lightdm/greeter
-        ./update_lightdm.sh
-        cd ../..
+    if command -v lightdm &> /dev/null; then
+        if [ -d "lightdm" ] && [ ! -e "$HOME/.lightdm" ]; then
+            echo "Setting up lightdm..."
+            stow lightdm
+            cd lightdm/greeter
+            ./update_lightdm.sh
+            cd ../..
+        fi
     fi
 }
