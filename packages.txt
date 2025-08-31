@@ -1,0 +1,62 @@
+# packages.txt - Package list for Fedora development environment
+# Add packages as you install them during system setup
+
+# Development Tools & Build Systems
+gcc
+gcc-c++
+make
+cmake
+gdb
+git
+stow
+
+# Python Development
+python3
+python3-pip
+python3-devel
+
+# Go Development
+golang
+
+# Text Editors & IDEs
+vim
+emacs
+code
+
+# Shell & Terminal Tools
+zsh
+tmux
+htop
+btop
+tree
+xclip
+
+# LaTeX & Document Processing
+texlive
+texlive-latex
+texlive-luatex
+texlive-collection-basic
+texlive-collection-latexrecommended
+
+# Containers & Virtualization
+docker
+docker-compose
+qemu
+qemu-kvm
+
+# Database
+postgresql
+postgresql-server
+
+# Graphics & Media
+gimp
+
+# System Utilities
+baobab
+arandr
+gnupg
+cmatrix
+syncthing
+
+# Programming Languages
+clisp
