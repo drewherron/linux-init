@@ -1,0 +1,12 @@
+# Ignore (much of) personal configuration
+secrets/
+project_repos.txt
+external_install.sh
+
+# Ignore backup files
+*backup*
+
+# Ignore temporary files
+*~
+*.swp
+*.swo
