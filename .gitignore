@@ -1,7 +1,8 @@
 # Ignore (much of) personal configuration
 secrets/
-project_repos.txt
+repos.txt
 external_install.sh
+unwanted_packages.txt
 
 # Ignore backup files
 *backup*
