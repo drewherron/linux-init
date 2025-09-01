@@ -1,0 +1,21 @@
+# Repository configuration - EXAMPLE FILE
+# Copy this to repos.txt and customize with your own repositories
+# Format: destination_directory:git_url
+# Lines starting with # are comments and will be ignored
+
+# Example: Clone repositories to ~/Projects
+# ~/Projects:git@github.com:yourusername/your-project.git
+# ~/Projects:https://github.com/yourusername/another-project.git
+
+# Example: Clone a theme/tool repository to ~/src
+~/src:git@github.com:drewherron/aldalome.git
+
+# Example: Clone work/document repositories to ~/Documents
+# ~/Documents:git@github.com:yourusername/resume.git
+# ~/Documents:git@github.com:yourusername/portfolio.git
+
+# You can use any destination directory
+# ~/custom-location:git@github.com:yourusername/special-repo.git
+
+# Empty lines are ignored
+# Mix SSH and HTTPS URLs as needed
