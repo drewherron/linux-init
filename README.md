@@ -18,10 +18,10 @@ cp -r ~/.ssh secrets/
 cp -r ~/.gnupg secrets/
 ```
 
-2. **Create personal project list** (optional):
+2. **Configure repositories** (optional):
 ```bash
-cp project_repos.example.txt project_repos.txt
-# Edit project_repos.txt with your own repository URLs
+cp repos.example.txt repos.txt
+# Edit repos.txt with your repository destinations and URLs
 ```
 
 3. **Create external package installer** (optional):
@@ -51,5 +51,5 @@ chmod +x setup.sh
 4. **External**: Runs custom external package installer script
 5. **Window Manager**: Clones and builds dwm, st, dmenu from GitHub
 6. **Dotfiles**: Uses GNU Stow to manage configurations (with backup)
-7. **Projects**: Clones personal repositories to `~/Projects`
+7. **Repositories**: Clones configured repositories to specified locations
 
