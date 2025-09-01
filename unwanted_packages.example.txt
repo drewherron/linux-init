@@ -1,0 +1,14 @@
+# Unwanted packages - EXAMPLE FILE
+# Copy this to unwanted_packages.txt and customize for your needs
+# Lines starting with # are comments and ignored
+
+# Common packages you might want to remove from Fedora Workstation:
+# firefox
+# gnome-shell
+# gnome-session
+# mutter
+# orca
+# brltty
+
+# Add packages you want removed, one per line
+# Leave empty if you don't want to remove any packages
