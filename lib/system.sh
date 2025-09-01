@@ -65,9 +65,9 @@ setup_keys() {
     if [ -d "$SCRIPT_DIR/secrets/.gnupg" ]; then
         echo "Copying GPG configuration..."
         sudo cp -r "$SCRIPT_DIR/secrets/.gnupg" "$HOME/"
-	sudo chown -R "$USER:$USER" "$HOME/.gnupg"
-	find "$HOME/.gnupg" -type f -exec chmod 600 {} \; 2>/dev/null || true
-	find "$HOME/.gnupg" -type d -exec chmod 700 {} \; 2>/dev/null || true
+    sudo chown -R "$USER:$USER" "$HOME/.gnupg"
+    find "$HOME/.gnupg" -type f -exec chmod 600 {} \; 2>/dev/null || true
+    find "$HOME/.gnupg" -type d -exec chmod 700 {} \; 2>/dev/null || true
         echo "✓ GPG keys copied"
     else
         echo "No GPG keys found in secrets/.gnupg/ (optional)"
@@ -112,4 +112,64 @@ Icon=dwm
 Type=XSession
 EOF
     fi
+}
+
+setup_zsh() {
+    echo ""
+    read -p "Set zsh as the default shell? (y/N): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping zsh setup."
+        return
+    fi
+
+    echo "Setting zsh as default shell..."
+
+    # Check if zsh is installed
+    if ! command -v zsh &> /dev/null; then
+        echo "Error: zsh is not installed. Install packages first."
+        return 1
+    fi
+
+    # Get the path to zsh
+    local zsh_path=$(which zsh)
+
+    # Check if zsh is already the default shell
+    if [[ "$SHELL" == "$zsh_path" ]]; then
+        echo "zsh is already the default shell."
+        return
+    fi
+
+    # Change shell to zsh
+    echo "Changing shell to zsh..."
+    chsh -s "$zsh_path"
+
+    echo "✓ Default shell set to zsh"
+    echo "Note: You'll need to log out and back in for the change to take effect."
+}
+
+setup_lightdm() {
+    echo ""
+    read -p "Install and set LightDM as the default display manager? (y/N): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping LightDM setup."
+        return
+    fi
+
+    echo "Installing and configuring LightDM..."
+
+    # Install LightDM and a greeter
+    sudo dnf install -y lightdm lightdm-gtk-greeter
+
+    # Disable current display manager (likely GDM)
+    echo "Disabling current display manager..."
+    sudo systemctl disable gdm.service 2>/dev/null || true
+
+    # Enable LightDM
+    echo "Enabling LightDM as default display manager..."
+    sudo systemctl enable lightdm.service
+
+    echo "✓ LightDM installed and set as default display manager"
+    echo "Note: LightDM will be active after the next reboot."
 }

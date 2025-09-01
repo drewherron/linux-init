@@ -3,6 +3,14 @@
 GITHUB_USER="drewherron"
 
 setup_dotfiles() {
+    echo ""
+    read -p "Clone and set up dotfiles from GitHub? This uses my personal configurations. (y/N): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping dotfiles setup."
+        return
+    fi
+
     echo "Cloning dotfiles repository..."
     cd ~
     if [ ! -d "dotfiles" ]; then
@@ -11,6 +19,7 @@ setup_dotfiles() {
 
     cd ~/dotfiles
 
+    echo ""
     read -p "Stow dotfiles now? (y/N): " -n 1 -r
     echo ""
     if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -37,12 +46,15 @@ setup_dotfiles() {
 
         # Directories that need --no-folding
         local no_folding_dirs=(
-            "dwm"
-            "lf"
-            "vim"
             "zsh"
             "syncthing"
             "lightline"
+        )
+
+        # Directories that need --no-folding --override (for absolute symlinks)
+        local no_folding_override_dirs=(
+            "vim"
+            "emacs"
         )
 
         # Create backup directory for existing files
@@ -72,7 +84,9 @@ setup_dotfiles() {
                 done
 
                 echo "Stowing $dir..."
-                if [[ " ${no_folding_dirs[*]} " =~ " $dir " ]]; then
+                if [[ " ${no_folding_override_dirs[*]} " =~ " $dir " ]]; then
+                    stow --no-folding --override "$dir"
+                elif [[ " ${no_folding_dirs[*]} " =~ " $dir " ]]; then
                     stow --no-folding "$dir"
                 else
                     stow "$dir"

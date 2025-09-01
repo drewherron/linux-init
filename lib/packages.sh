@@ -32,19 +32,41 @@ install_packages() {
 }
 
 cleanup_unwanted() {
+    local unwanted_file="$SCRIPT_DIR/unwanted_packages.txt"
+
+    # Check if unwanted packages file exists
+    if [ ! -f "$unwanted_file" ]; then
+        echo "No unwanted_packages.txt found. Skipping package cleanup."
+        echo "Create $unwanted_file with packages you want removed (see unwanted_packages.example.txt)"
+        return
+    fi
+
+    echo ""
+    read -p "Remove unwanted packages? (y/N): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping package cleanup."
+        return
+    fi
+
     echo "Removing unwanted packages..."
+
+    # Read unwanted packages from file, skipping empty lines and comments
+    local unwanted_packages=()
+    while IFS= read -r line; do
+        # Skip empty lines and comments
+        [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+        unwanted_packages+=("$line")
+    done < "$unwanted_file"
+
+    # Check if we have any packages to remove
+    if [ ${#unwanted_packages[@]} -eq 0 ]; then
+        echo "No packages found in $unwanted_file. Skipping package cleanup."
+        return
+    fi
 
     # Build list of installed unwanted packages in one query
     local to_remove=()
-    local unwanted_packages=(
-        "firefox"
-#        "gnome-shell"
-#        "gnome-session"
-#        "mutter"
-#        "orca"
-#        "brltty"
-    )
-
     for package in "${unwanted_packages[@]}"; do
         if rpm -qa | grep -q "^$package"; then
             to_remove+=("$package")
@@ -62,6 +84,8 @@ cleanup_unwanted() {
         else
             echo "Skipping removal of unwanted packages."
         fi
+    else
+        echo "None of the unwanted packages are currently installed."
     fi
 
     echo "✓ Cleanup completed"
@@ -74,6 +98,14 @@ install_external_packages() {
     if [ ! -f "$external_script" ]; then
         echo "No external_install.sh found. Skipping external package installation."
         echo "Create $external_script with your external packages (see external_install.example.sh)"
+        return
+    fi
+
+    echo ""
+    read -p "Install external packages? This runs custom installation scripts. (y/N): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping external package installation."
         return
     fi
 
