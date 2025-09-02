@@ -34,9 +34,6 @@ install_packages() {
 
     # Clean up unwanted packages after installation
     cleanup_unwanted
-
-    # Install external packages
-    install_external_packages
 }
 
 cleanup_unwanted() {
@@ -99,26 +96,3 @@ cleanup_unwanted() {
     echo "✓ Cleanup completed"
 }
 
-install_external_packages() {
-    local external_script="$SCRIPT_DIR/external_install.sh"
-
-    # Check if external install script exists
-    if [ ! -f "$external_script" ]; then
-        echo "No external_install.sh found. Skipping external package installation."
-        echo "Create $external_script with your external packages (see external_install.example.sh)"
-        return
-    fi
-
-    echo ""
-    read -p "Install external packages? This runs custom installation scripts. (y/N): " -n 1 -r
-    echo ""
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        echo "Skipping external package installation."
-        return
-    fi
-
-    # Source and run the external install script
-    echo "Running external package installation..."
-    source "$external_script"
-    setup_external_packages
-}
