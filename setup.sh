@@ -53,6 +53,7 @@ main() {
     setup_xinitrc
     setup_dotfiles
     setup_zsh
+    setup_fonts
     setup_keyboard
 
     echo "Post-install script completed successfully!"

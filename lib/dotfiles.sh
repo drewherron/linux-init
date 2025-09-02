@@ -83,19 +83,19 @@ setup_dotfiles() {
                     fi
                 done < <(find "$dir" -type f -print0 2>/dev/null)
 
+                # Verify directory exists and is not empty
+                if [ -z "$dir" ] || [ ! -d "$dir" ]; then
+                    echo "Warning: Skipping invalid directory: '$dir'"
+                    continue
+                fi
+                
                 echo "Stowing $dir..."
                 if [[ " ${no_folding_override_dirs[*]} " =~ " $dir " ]]; then
-                    if ! stow --no-folding --override "$dir" 2>/dev/null; then
-                        echo "Warning: Failed to stow $dir with --no-folding --override"
-                    fi
+                    stow --no-folding --override "$dir" || echo "Warning: Failed to stow $dir with --no-folding --override"
                 elif [[ " ${no_folding_dirs[*]} " =~ " $dir " ]]; then
-                    if ! stow --no-folding "$dir" 2>/dev/null; then
-                        echo "Warning: Failed to stow $dir with --no-folding"
-                    fi
+                    stow --no-folding "$dir" || echo "Warning: Failed to stow $dir with --no-folding"
                 else
-                    if ! stow "$dir" 2>/dev/null; then
-                        echo "Warning: Failed to stow $dir"
-                    fi
+                    stow "$dir" || echo "Warning: Failed to stow $dir"
                 fi
             fi
         done

@@ -164,6 +164,37 @@ setup_zsh() {
     echo "Note: You'll need to log out and back in for the change to take effect."
 }
 
+setup_fonts() {
+    local fonts_dir="$SCRIPT_DIR/.fonts"
+    
+    # Check if fonts directory exists
+    if [ ! -d "$fonts_dir" ]; then
+        echo "No .fonts directory found. Skipping font installation."
+        return
+    fi
+    
+    echo ""
+    read -p "Install fonts from .fonts directory? (y/N): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping font installation."
+        return
+    fi
+    
+    echo "Installing fonts..."
+    
+    # Create user fonts directory if it doesn't exist
+    mkdir -p "$HOME/.fonts"
+    
+    # Copy fonts from script directory to user fonts directory
+    cp -r "$fonts_dir"/* "$HOME/.fonts/" 2>/dev/null
+    
+    # Update font cache
+    fc-cache -f "$HOME/.fonts"
+    
+    echo "✓ Fonts installed and cache updated"
+}
+
 setup_lightdm() {
     echo ""
     read -p "Install and set LightDM as the default display manager? (y/N): " -n 1 -r
