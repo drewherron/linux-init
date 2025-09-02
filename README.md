@@ -8,7 +8,7 @@ A modular post-install script for Fedora that sets up a complete development env
 - Removes unwanted packages
 - Installs dwm + development tools + personal configurations
 
-This is for my personal use, but I tried to make it a bit more generalizable and customizable for anyone else who may want to use it. I left my personal project repos and external packages out of it, and left the list of packages to be customized by you. But it does still use my dotfiles repo for configurations. Again, you can change that too. If you run this, you should end up with my simple dwm setup using my custom theme.
+This is for my personal use, but I tried to make it a bit more generalizable and customizable for anyone else who may want to use it. I left my personal project repos out of it, and left the list of packages to be customized by you. But it does still use my dotfiles repo for configurations. Again, you can change that too. If you run this, you should end up with my simple dwm setup using my custom theme.
 
 ## Prerequisites
 
@@ -24,10 +24,10 @@ cp repos.example.txt repos.txt
 # Edit repos.txt with your repository destinations and URLs
 ```
 
-3. **Create external package installer** (optional):
+3. **Configure unwanted packages** (optional):
 ```bash
-cp external_install.example.sh external_install.sh
-# Edit external_install.sh to add your external packages
+cp unwanted_packages.example.txt unwanted_packages.txt
+# Edit unwanted_packages.txt with packages to remove
 ```
 
 
@@ -47,9 +47,13 @@ chmod +x setup.sh
 
 1. **Keys**: Copies SSH/GPG keys from `secrets/` directories
 2. **Directories**: Creates standard folders (bin, config, Documents, etc.)
-3. **Packages**: Installs development tools, removes GNOME bloat
-4. **External**: Runs custom external package installer script
-5. **Window Manager**: Clones and builds dwm, st, dmenu from GitHub
-6. **Dotfiles**: Uses GNU Stow to manage configurations (with backup)
-7. **Repositories**: Clones configured repositories to specified locations
+3. **System**: Updates system packages via dnf
+4. **Display Manager**: Optionally installs and configures LightDM
+5. **Packages**: Installs development tools, removes unwanted packages
+6. **Window Manager**: Clones and builds dwm, st, dmenu from GitHub
+7. **xinitrc**: Configures dwm session for display managers
+8. **Dotfiles**: Uses GNU Stow to manage configurations (with backup)
+9. **Shell**: Optionally sets zsh as default shell
+10. **Keyboard**: Optionally sets up KMonad configuration
+11. **Repositories**: Clones configured repositories to specified locations
 
