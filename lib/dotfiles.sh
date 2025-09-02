@@ -28,6 +28,7 @@ setup_dotfiles() {
             "bash"
             "bin"
             "dwm"
+	    "emacs"
             "face"
             "git"
             "lf"
@@ -47,6 +48,7 @@ setup_dotfiles() {
         # Directories that need --no-folding
         local no_folding_dirs=(
             "zsh"
+	    "emacs"
             "syncthing"
             "lightline"
         )
@@ -103,6 +105,30 @@ setup_dotfiles() {
         if [ -d "$backup_dir" ]; then
             echo "✓ Original files backed up to: $backup_dir"
         fi
+
+        # Clean up old Emacs configuration directory if stowing emacs
+        if [[ " ${dotfiles_to_stow[*]} " =~ " emacs " ]] && [ -d "$HOME/.emacs.d" ]; then
+            echo "Removing old ~/.emacs.d directory..."
+            rm -rf "$HOME/.emacs.d"
+            echo "✓ Old Emacs configuration removed"
+        fi
+
+        # Enable and start systemd user services for specific dotfiles
+        local systemd_service_dirs=("emacs" "syncthing")
+        for service_dir in "${systemd_service_dirs[@]}"; do
+            if [[ " ${dotfiles_to_stow[*]} " =~ " $service_dir " ]] && [ -d "$service_dir/.config/systemd/user" ]; then
+                echo "Enabling systemd user services for $service_dir..."
+                for service_file in "$service_dir/.config/systemd/user"/*.service; do
+                    if [ -f "$service_file" ]; then
+                        local service_name=$(basename "$service_file")
+                        systemctl --user daemon-reload
+                        systemctl --user enable "$service_name"
+                        systemctl --user start "$service_name"
+                        echo "✓ Enabled and started $service_name"
+                    fi
+                done
+            fi
+        done
     else
         echo "Skipping dotfiles stow. You can run it manually later."
     fi

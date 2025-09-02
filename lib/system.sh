@@ -80,6 +80,16 @@ setup_keys() {
     else
         echo "No GPG keys found in secrets/.gnupg/ (optional)"
     fi
+
+    # Copy SECRETS file if it exists
+    if [ -f "$SCRIPT_DIR/secrets/SECRETS" ]; then
+        echo "Copying SECRETS file..."
+        cp "$SCRIPT_DIR/secrets/SECRETS" "$HOME/"
+        chmod 600 "$HOME/SECRETS"
+        echo "✓ SECRETS file copied"
+    else
+        echo "No SECRETS file found in secrets/ (optional)"
+    fi
 }
 
 make_directories() {
@@ -219,4 +229,26 @@ setup_lightdm() {
 
     echo "✓ LightDM installed and set as default display manager"
     echo "Note: LightDM will be active after the next reboot."
+}
+
+setup_keyboard() {
+    echo ""
+    read -p "Set up KMonad keyboard configuration? (y/N): " -n 1 -r
+    echo ""
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        if [ -d "$HOME/Projects/keyboard" ]; then
+            echo "Setting up KMonad keyboard configuration..."
+            cd "$HOME/Projects/keyboard"
+            if [ -f "kmonad-setup.sh" ]; then
+                chmod +x kmonad-setup.sh
+                ./kmonad-setup.sh
+            else
+                echo "Warning: kmonad-setup.sh not found in keyboard repository"
+            fi
+        else
+            echo "Warning: ~/Projects/keyboard not found. Skipping keyboard setup."
+        fi
+    else
+        echo "Skipping keyboard setup."
+    fi
 }
