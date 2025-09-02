@@ -19,28 +19,6 @@ source "$SCRIPT_DIR/lib/packages.sh"
 source "$SCRIPT_DIR/lib/repos.sh"
 source "$SCRIPT_DIR/lib/dotfiles.sh"
 
-setup_keyboard() {
-    echo ""
-    read -p "Set up KMonad keyboard configuration? (y/N): " -n 1 -r
-    echo ""
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        if [ -d "$HOME/Projects/keyboard" ]; then
-            echo "Setting up KMonad keyboard configuration..."
-            cd "$HOME/Projects/keyboard"
-            if [ -f "kmonad-setup.sh" ]; then
-                chmod +x kmonad-setup.sh
-                ./kmonad-setup.sh
-            else
-                echo "Warning: kmonad-setup.sh not found in keyboard repository"
-            fi
-        else
-            echo "Warning: ~/Projects/keyboard not found. Skipping keyboard setup."
-        fi
-    else
-        echo "Skipping keyboard setup."
-    fi
-}
-
 main() {
     echo "Starting Fedora post-install setup..."
 
