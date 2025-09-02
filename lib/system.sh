@@ -227,6 +227,16 @@ setup_lightdm() {
     echo "Enabling LightDM as default display manager..."
     sudo systemctl enable lightdm.service
 
+    # Link custom configuration if dotfiles repo is available
+    local config_source="$HOME/dotfiles/lightdm/greeter/lightdm-gtk-greeter.conf"
+    if [ -f "$config_source" ]; then
+        echo "Linking custom LightDM configuration..."
+        sudo ln -sf "$config_source" /etc/lightdm/lightdm-gtk-greeter.conf
+        echo "✓ Custom LightDM configuration linked"
+    else
+        echo "Note: Custom LightDM config not found at $config_source (will use defaults)"
+    fi
+
     echo "✓ LightDM installed and set as default display manager"
     echo "Note: LightDM will be active after the next reboot."
 }

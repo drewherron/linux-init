@@ -140,14 +140,4 @@ setup_dotfiles() {
         chmod +x "$HOME/.local/bin/dmenu_run_history"
     fi
 
-    # Special handling for lightdm (stow + run script)
-    if command -v lightdm &> /dev/null; then
-        if [ -d "lightdm" ] && [ ! -e "$HOME/.lightdm" ]; then
-            echo "Setting up lightdm..."
-            stow lightdm
-            cd lightdm/greeter
-            ./update_lightdm.sh
-            cd ../..
-        fi
-    fi
 }

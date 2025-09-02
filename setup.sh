@@ -25,13 +25,13 @@ main() {
     setup_keys
     make_directories
     update_system
-    setup_lightdm
     install_packages
     setup_repos
     setup_xinitrc
     setup_dotfiles
     setup_zsh
     setup_fonts
+    setup_lightdm
     setup_keyboard
 
     echo "Post-install script completed successfully!"
