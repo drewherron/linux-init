@@ -54,7 +54,6 @@ setup_dotfiles() {
         # Directories that need --no-folding --override (for absolute symlinks)
         local no_folding_override_dirs=(
             "vim"
-            "emacs"
         )
 
         # Create backup directory for existing files
@@ -65,31 +64,38 @@ setup_dotfiles() {
             if [ -d "$dir" ]; then
                 echo "Processing $dir..."
 
-                # Get list of files that would be created by stow
-                files_to_stow=$(stow -n "$dir" 2>&1 | grep 'LINK: ' | sed 's/LINK: //; s/ => .*//')
-
-                for file in $files_to_stow; do
-                    local target_path="$HOME/$file"
+                # Find all files in the dotfiles directory that would be linked
+                while IFS= read -r -d '' file; do
+                    # Get relative path from dotfiles directory
+                    local rel_path="${file#$PWD/$dir/}"
+                    local target_path="$HOME/$rel_path"
+                    
                     # If target exists and is not already a symlink, back it up
                     if [ -e "$target_path" ] && [ ! -L "$target_path" ]; then
-                        echo "Backing up existing $file..."
+                        echo "Backing up existing $rel_path..."
                         # Ensure backup directory exists
                         if [ ! -d "$backup_dir" ]; then
                             mkdir -p "$backup_dir"
                         fi
                         # Preserve directory structure in backup
-                        mkdir -p "$backup_dir/$(dirname "$file")"
-                        mv "$target_path" "$backup_dir/$file"
+                        mkdir -p "$backup_dir/$(dirname "$rel_path")"
+                        mv "$target_path" "$backup_dir/$rel_path"
                     fi
-                done
+                done < <(find "$dir" -type f -print0 2>/dev/null)
 
                 echo "Stowing $dir..."
                 if [[ " ${no_folding_override_dirs[*]} " =~ " $dir " ]]; then
-                    stow --no-folding --override "$dir"
+                    if ! stow --no-folding --override "$dir" 2>/dev/null; then
+                        echo "Warning: Failed to stow $dir with --no-folding --override"
+                    fi
                 elif [[ " ${no_folding_dirs[*]} " =~ " $dir " ]]; then
-                    stow --no-folding "$dir"
+                    if ! stow --no-folding "$dir" 2>/dev/null; then
+                        echo "Warning: Failed to stow $dir with --no-folding"
+                    fi
                 else
-                    stow "$dir"
+                    if ! stow "$dir" 2>/dev/null; then
+                        echo "Warning: Failed to stow $dir"
+                    fi
                 fi
             fi
         done

@@ -4,6 +4,14 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
 
 install_packages() {
+    echo ""
+    read -p "Install packages from packages.txt? (y/N): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping package installation."
+        return
+    fi
+
     local PKG_FILE="packages.txt"
 
     # Ensure we have the package file

@@ -9,6 +9,14 @@ update_system() {
 }
 
 setup_keys() {
+    echo ""
+    read -p "Set up SSH and GPG keys? (y/N): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping SSH and GPG key setup."
+        return
+    fi
+
     echo "Setting up SSH and GPG keys..."
 
     # Check if secrets directory exists
@@ -91,13 +99,21 @@ make_directories() {
 }
 
 setup_xinitrc() {
+    echo ""
+    read -p "Configure dwm as the default window manager? (y/N): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping dwm configuration."
+        return
+    fi
+
     echo "Configuring dwm as the default window manager..."
 
     # Create xinitrc for startx
-    if [ ! -f "$HOME/.xinitrc" ]; then
-        echo "exec dwm" > "$HOME/.xinitrc"
-        chmod +x "$HOME/.xinitrc"
-    fi
+#    if [ ! -f "$HOME/.xinitrc" ]; then
+#        echo "exec dwm" > "$HOME/.xinitrc"
+#        chmod +x "$HOME/.xinitrc"
+#    fi
 
     # Create desktop session file for dwm
     if [ ! -f "/usr/share/xsessions/dwm.desktop" ]; then
