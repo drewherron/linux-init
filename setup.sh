@@ -32,6 +32,7 @@ main() {
     setup_zsh
     setup_fonts
     setup_lightdm
+    setup_plymouth
     setup_keyboard
 
     echo "Post-install script completed successfully!"

@@ -227,14 +227,32 @@ setup_lightdm() {
     echo "Enabling LightDM as default display manager..."
     sudo systemctl enable lightdm.service
 
-    # Link custom configuration if dotfiles repo is available
-    local config_source="$HOME/dotfiles/lightdm/greeter/lightdm-gtk-greeter.conf"
-    if [ -f "$config_source" ]; then
-        echo "Linking custom LightDM configuration..."
-        sudo ln -sf "$config_source" /etc/lightdm/lightdm-gtk-greeter.conf
-        echo "✓ Custom LightDM configuration linked"
+    # Ensure GTK greeter is configured
+    sudo sed -i 's/#greeter-session=.*/greeter-session=lightdm-gtk-greeter/' /etc/lightdm/lightdm.conf
+
+    # Copy assets and link configuration if dotfiles repo is available
+    local greeter_config="$HOME/dotfiles/lightdm/greeter/lightdm-gtk-greeter.conf"
+    local wallpaper_source="$HOME/Pictures/wallpaper/other/shotei-takahashi-starlight.night.jpg"
+    
+    # Copy wallpaper and user image to system-accessible locations
+    if [ -f "$wallpaper_source" ]; then
+        echo "Copying LightDM wallpaper to system directory..."
+        sudo cp "$wallpaper_source" /usr/share/backgrounds/
+        echo "✓ LightDM wallpaper copied"
+    fi
+    
+    if [ -f "$HOME/.face" ]; then
+        echo "Copying user face image to system directory..."
+        sudo cp "$HOME/.face" /usr/share/pixmaps/user-face.png
+        echo "✓ LightDM user image copied"
+    fi
+    
+    if [ -f "$greeter_config" ]; then
+        echo "Copying custom LightDM greeter configuration..."
+        sudo cp "$greeter_config" /etc/lightdm/lightdm-gtk-greeter.conf
+        echo "✓ Custom LightDM greeter configuration copied"
     else
-        echo "Note: Custom LightDM config not found at $config_source (will use defaults)"
+        echo "Note: Custom LightDM greeter config not found (will use defaults)"
     fi
 
     echo "✓ LightDM installed and set as default display manager"
@@ -261,4 +279,109 @@ setup_keyboard() {
     else
         echo "Skipping keyboard setup."
     fi
+}
+
+
+setup_plymouth() {
+    echo ""
+    read -p "Customize Plymouth boot/LUKS screen with custom background? (y/N): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping Plymouth customization."
+        return
+    fi
+
+    echo "Customizing Plymouth boot screen..."
+
+    # Check if dotfiles wallpaper directory exists
+    local wallpaper_source="$HOME/dotfiles/wallpaper/.wallpaper/other/penguins-pc-1920x1080.jpeg"
+    if [ ! -f "$wallpaper_source" ]; then
+        # Try alternative location
+        wallpaper_source="$HOME/Pictures/wallpaper/other/penguins-pc-1920x1080.jpeg"
+        if [ ! -f "$wallpaper_source" ]; then
+            echo "Warning: Background image not found. Skipping Plymouth customization."
+            return
+        fi
+    fi
+
+    # Create custom theme directory based on spinner theme
+    local theme_dir="/usr/share/plymouth/themes/custom-penguins"
+    sudo mkdir -p "$theme_dir"
+
+    # Copy the spinner theme as a base
+    sudo cp -r /usr/share/plymouth/themes/spinner/* "$theme_dir/" 2>/dev/null || {
+        echo "Warning: Spinner theme not found. Installing required packages first."
+        sudo dnf install -y plymouth-theme-spinner
+        sudo cp -r /usr/share/plymouth/themes/spinner/* "$theme_dir/"
+    }
+
+    # Convert and copy background image
+    echo "Converting and copying background image..."
+    
+    # Convert JPEG to PNG for better Plymouth compatibility
+    if command -v magick &> /dev/null; then
+        magick "$wallpaper_source" /tmp/background.png
+        sudo cp /tmp/background.png "$theme_dir/background.png"
+        rm -f /tmp/background.png
+    elif command -v convert &> /dev/null; then
+        convert "$wallpaper_source" /tmp/background.png
+        sudo cp /tmp/background.png "$theme_dir/background.png"
+        rm -f /tmp/background.png
+    else
+        # If ImageMagick not available, try copying as-is
+        sudo cp "$wallpaper_source" "$theme_dir/background.png"
+    fi
+
+    # Create custom theme configuration
+    sudo tee "$theme_dir/custom-penguins.plymouth" > /dev/null << 'EOF'
+[Plymouth Theme]
+Name=Custom Penguins
+Description=Custom theme with penguin background
+ModuleName=two-step
+
+[two-step]
+ImageDir=/usr/share/plymouth/themes/custom-penguins
+BackgroundStartColor=0x000000
+BackgroundEndColor=0x000000
+BackgroundImage=background.png
+ProgressBarBackgroundColor=0x606060
+ProgressBarForegroundColor=0xffffff
+MessageBelowAnimation=true
+HorizontalAlignment=0.5
+VerticalAlignment=0.25
+DialogHorizontalAlignment=0.5
+DialogVerticalAlignment=0.25
+MessageHorizontalAlignment=0.5
+MessageVerticalAlignment=0.3
+WatermarkHorizontalAlignment=1.0
+WatermarkVerticalAlignment=1.0
+WatermarkFade=1.0
+EOF
+
+    # Remove or hide the Fedora logo watermark
+    if [ -f "$theme_dir/watermark.png" ]; then
+        sudo rm "$theme_dir/watermark.png"
+    fi
+    
+    # Create an empty/transparent watermark to replace any logo
+    if command -v magick &> /dev/null; then
+        magick -size 1x1 xc:transparent /tmp/empty.png
+        sudo cp /tmp/empty.png "$theme_dir/watermark.png"
+        rm -f /tmp/empty.png
+    elif command -v convert &> /dev/null; then
+        convert -size 1x1 xc:transparent /tmp/empty.png
+        sudo cp /tmp/empty.png "$theme_dir/watermark.png"
+        rm -f /tmp/empty.png
+    fi
+
+    # Set the custom theme as default
+    echo "Setting Plymouth theme..."
+    sudo plymouth-set-default-theme custom-penguins
+
+    # Rebuild initramfs to include the new theme
+    echo "Rebuilding initramfs (this may take a moment)..."
+    sudo dracut -f
+
+    echo "✓ Plymouth customization completed"
+    echo "Note: Custom boot screen will be visible on next boot/reboot."
 }
