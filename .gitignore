@@ -11,3 +11,4 @@ unwanted_packages.txt
 *~
 *.swp
 *.swo
+.fonts
