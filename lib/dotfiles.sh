@@ -43,6 +43,7 @@ setup_dotfiles() {
             "xresources"
             "zathura"
             "zsh"
+            "kmonad"
         )
 
         # Directories that need --no-folding

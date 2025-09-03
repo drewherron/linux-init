@@ -270,6 +270,21 @@ setup_keyboard() {
             if [ -f "kmonad-setup.sh" ]; then
                 chmod +x kmonad-setup.sh
                 ./kmonad-setup.sh
+                
+                # Enable and start kmonad systemd user services if they exist
+                if [ -d "$HOME/.config/systemd/user" ]; then
+                    echo "Checking for kmonad systemd services..."
+                    for service_file in "$HOME/.config/systemd/user"/*kmonad*.service; do
+                        if [ -f "$service_file" ]; then
+                            local service_name=$(basename "$service_file")
+                            echo "Enabling and starting $service_name..."
+                            systemctl --user daemon-reload
+                            systemctl --user enable "$service_name"
+                            systemctl --user start "$service_name"
+                            echo "✓ $service_name enabled and started"
+                        fi
+                    done
+                fi
             else
                 echo "Warning: kmonad-setup.sh not found in keyboard repository"
             fi
