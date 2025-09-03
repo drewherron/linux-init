@@ -8,7 +8,13 @@ make
 cmake
 gdb
 git
+
+# Plymouth themes for boot/LUKS customization
+plymouth
+plymouth-theme-spinner
+plymouth-scripts
 stow
+nodejs
 
 # Haskell Development
 stack
@@ -23,7 +29,8 @@ golang
 
 # Text Editors & IDEs
 vim
-emacs
+emacs-gtk+x11
+emacsclient
 
 # Shell & Terminal Tools
 zsh
@@ -32,6 +39,7 @@ htop
 btop
 tree
 xclip
+bat
 
 # LaTeX & Document Processing
 texlive
@@ -60,6 +68,7 @@ arandr
 gnupg
 cmatrix
 syncthing
+trash-cli
 
 # Programming Languages
 clisp
@@ -68,3 +77,5 @@ clisp
 libX11-devel
 libXinerama-devel
 libXft-devel
+xautolock
+xsetroot
