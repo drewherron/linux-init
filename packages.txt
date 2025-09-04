@@ -8,13 +8,14 @@ make
 cmake
 gdb
 git
+nodejs
+nodejs-npm
 
 # Plymouth themes for boot/LUKS customization
 plymouth
 plymouth-theme-spinner
 plymouth-scripts
 stow
-nodejs
 
 # Haskell Development
 stack
@@ -61,6 +62,7 @@ postgresql-server
 # Graphics & Media
 gimp
 alsa-lib-devel
+ImageMagick
 
 # System Utilities
 baobab

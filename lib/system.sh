@@ -309,7 +309,7 @@ setup_plymouth() {
     echo "Customizing Plymouth boot screen..."
 
     # Check if dotfiles wallpaper directory exists
-    local wallpaper_source="$HOME/dotfiles/wallpaper/.wallpaper/other/penguins-pc-1920x1080.jpeg"
+    local wallpaper_source="$HOME/dotfiles/wallpaper/Pictures/wallpaper/other/penguins-pc-1920x1080.jpeg"
     if [ ! -f "$wallpaper_source" ]; then
         # Try alternative location
         wallpaper_source="$HOME/Pictures/wallpaper/other/penguins-pc-1920x1080.jpeg"
@@ -333,17 +333,27 @@ setup_plymouth() {
     # Convert and copy background image
     echo "Converting and copying background image..."
     
+    # Install ImageMagick if not available
+    if ! command -v magick &> /dev/null && ! command -v convert &> /dev/null; then
+        echo "Installing ImageMagick for image conversion..."
+        sudo dnf install -y ImageMagick
+    fi
+    
     # Convert JPEG to PNG for better Plymouth compatibility
     if command -v magick &> /dev/null; then
+        echo "Converting JPEG to PNG using magick..."
         magick "$wallpaper_source" /tmp/background.png
         sudo cp /tmp/background.png "$theme_dir/background.png"
         rm -f /tmp/background.png
+        echo "✓ Background image converted and copied"
     elif command -v convert &> /dev/null; then
+        echo "Converting JPEG to PNG using convert..."
         convert "$wallpaper_source" /tmp/background.png
         sudo cp /tmp/background.png "$theme_dir/background.png"
         rm -f /tmp/background.png
+        echo "✓ Background image converted and copied"
     else
-        # If ImageMagick not available, try copying as-is
+        echo "Warning: ImageMagick installation failed. Plymouth may not display background properly."
         sudo cp "$wallpaper_source" "$theme_dir/background.png"
     fi
 
