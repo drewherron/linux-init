@@ -93,6 +93,22 @@ cleanup_unwanted() {
         echo "None of the unwanted packages are currently installed."
     fi
 
+    # Clean up orphaned packages and cache
+    echo ""
+    echo "Cleaning up orphaned packages and cache..."
+    
+    # Remove orphaned dependencies (equivalent to apt autoremove)
+    echo "Removing orphaned packages..."
+    sudo dnf autoremove -y
+    
+    # Clean package cache (equivalent to apt autoclean)
+    echo "Cleaning package cache..."
+    sudo dnf clean packages
+    
+    # Optional: clean all cached data (equivalent to apt clean)
+    # Uncomment if you want more aggressive cleanup
+    # sudo dnf clean all
+
     echo "✓ Cleanup completed"
 }
 
