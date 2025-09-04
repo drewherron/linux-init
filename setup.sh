@@ -28,6 +28,7 @@ main() {
     install_packages
     setup_repos
     setup_xinitrc
+    setup_trackpad
     setup_dotfiles
     setup_zsh
     setup_fonts
