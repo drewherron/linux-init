@@ -297,6 +297,81 @@ setup_keyboard() {
 }
 
 
+setup_trackpad() {
+    echo ""
+    read -p "Configure trackpad with natural scrolling? (y/N): " -n 1 -r
+    echo ""
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        echo "Skipping trackpad configuration."
+        return
+    fi
+
+    echo "Configuring trackpad with natural scrolling..."
+
+    # Install xinput if not already installed
+    if ! command -v xinput &> /dev/null; then
+        echo "Installing xinput..."
+        sudo dnf install -y xinput
+    fi
+
+    # Create permanent libinput configuration for natural scrolling
+    local libinput_conf="/etc/X11/xorg.conf.d/40-libinput.conf"
+    
+    if [ ! -f "$libinput_conf" ]; then
+        echo "Creating libinput configuration file..."
+        sudo tee "$libinput_conf" > /dev/null << 'EOF'
+# Match on all types of devices but tablet devices and joysticks
+Section "InputClass"
+        Identifier "libinput pointer catchall"
+        MatchIsPointer "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+EndSection
+
+Section "InputClass"
+        Identifier "libinput keyboard catchall"
+        MatchIsKeyboard "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+EndSection
+
+Section "InputClass"
+        Identifier "libinput touchpad catchall"
+        MatchIsTouchpad "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+        Option "NaturalScrolling" "true"
+EndSection
+
+Section "InputClass"
+        Identifier "libinput touchscreen catchall"
+        MatchIsTouchscreen "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+EndSection
+
+Section "InputClass"
+        Identifier "libinput tablet catchall"
+        MatchIsTablet "on"
+        MatchDevicePath "/dev/input/event*"
+        Driver "libinput"
+EndSection
+EOF
+    else
+        # Check if natural scrolling is already configured
+        if grep -q "NaturalScrolling.*true" "$libinput_conf"; then
+            echo "Natural scrolling already configured in $libinput_conf"
+        else
+            echo "Adding natural scrolling to existing libinput configuration..."
+            sudo sed -i '/MatchIsTouchpad.*on/,/EndSection/ s/Driver "libinput"/Driver "libinput"\n        Option "NaturalScrolling" "true"/' "$libinput_conf"
+        fi
+    fi
+
+    echo "✓ Trackpad configured with natural scrolling"
+    echo "Note: Natural scrolling will be active after X11 restart or reboot."
+    echo "To apply immediately, run: xinput set-prop \"\$(xinput list --name-only | grep -i touchpad)\" \"libinput Natural Scrolling Enabled\" 1"
+}
+
 setup_plymouth() {
     echo ""
     read -p "Customize Plymouth boot/LUKS screen with custom background? (y/N): " -n 1 -r
