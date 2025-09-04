@@ -41,6 +41,7 @@ btop
 tree
 xclip
 bat
+pass
 
 # LaTeX & Document Processing
 texlive
@@ -48,7 +49,8 @@ texlive-latex
 texlive-luatex
 texlive-collection-basic
 texlive-collection-latexrecommended
-
+liberation-fonts
+    
 # Containers & Virtualization
 docker
 docker-compose
@@ -81,3 +83,4 @@ libXinerama-devel
 libXft-devel
 xautolock
 xsetroot
+xinput
