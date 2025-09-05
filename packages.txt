@@ -1,39 +1,30 @@
 # packages.txt - Package list for Fedora development environment
-# Add packages as you install them during system setup
 
-# Development Tools & Build Systems
+# Build Tools & Development Core
 gcc
 gcc-c++
 make
 cmake
 gdb
 git
-nodejs
-nodejs-npm
-
-# Plymouth themes for boot/LUKS customization
-plymouth
-plymouth-theme-spinner
-plymouth-scripts
 stow
 
-# Haskell Development
-stack
-
-# Python Development
+# Programming Languages & Runtimes
+nodejs
+nodejs-npm
 python3
 python3-pip
 python3-devel
-
-# Go Development
 golang
+stack
+clisp
 
-# Text Editors & IDEs
+# Editors & IDEs
 vim
 emacs-gtk+x11
 emacsclient
 
-# Shell & Terminal Tools
+# Shell & CLI Tools
 zsh
 tmux
 htop
@@ -42,15 +33,47 @@ tree
 xclip
 bat
 pass
+trash-cli
 
-# LaTeX & Document Processing
+# X11 & Window Manager Dependencies
+libX11-devel
+libXinerama-devel
+libXft-devel
+libXrandr-devel
+xautolock
+xsetroot
+xinput
+xset
+xrandr
+arandr
+lxappearance
+dunst
+scrot
+
+# Graphics & Media
+gimp
+ImageMagick
+alsa-lib-devel
+
+# Document Processing
 texlive
 texlive-latex
 texlive-luatex
 texlive-collection-basic
 texlive-collection-latexrecommended
 liberation-fonts
-    
+libreoffice
+zathura
+
+# System & Boot Customization
+plymouth
+plymouth-theme-spinner
+plymouth-scripts
+gnupg
+syncthing
+baobab
+cmatrix
+
 # Containers & Virtualization
 docker
 docker-compose
@@ -60,27 +83,3 @@ qemu-kvm
 # Database
 postgresql
 postgresql-server
-
-# Graphics & Media
-gimp
-alsa-lib-devel
-ImageMagick
-
-# System Utilities
-baobab
-arandr
-gnupg
-cmatrix
-syncthing
-trash-cli
-
-# Programming Languages
-clisp
-
-# X11
-libX11-devel
-libXinerama-devel
-libXft-devel
-xautolock
-xsetroot
-xinput
