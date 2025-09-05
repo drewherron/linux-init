@@ -42,6 +42,7 @@ libXft-devel
 libXrandr-devel
 xautolock
 xsetroot
+xsettingsd
 xinput
 xset
 xrandr
