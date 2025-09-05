@@ -11,7 +11,7 @@ Here's how I use it:
 
 That's it. I've tested it, and every step works for me.
 
-This is for my personal use, but I tried to make it a bit more generalizable and customizable for anyone else who may want to use it. You might find some good use for the code with just a few edits. It does clone my own repos where necessary (building dwm, stowing dotfiles).
+This is for my personal use, but I tried to make it a bit more generalizable and customizable for anyone else who may want to use it. You might find some good use for the code with just a few edits. It does clone my own repos where necessary (building dwm, stowing dotfiles). This will bring in more than you want, but you can always delete what you don't need.
 
 ## What It Does
 
@@ -28,4 +28,13 @@ This is for my personal use, but I tried to make it a bit more generalizable and
 10. **Keyboard**: Sets up KMonad configuration
 11. **Repositories**: Clones configured repositories to specified locations
 
-Nearly all of these (all except updating packages) have a confirmation beforehand so you can choose at runtime what you actually want to include. Unless you use Colemak-DH, you'll probably want to skip the keyboard setup with kmonad, although I'll be changing that soon too.
+Nearly all of these (all except updating packages) have a confirmation beforehand so you can choose at runtime what you actually want to include. 
+
+PS: The kmonad section will set mod keys on your bottom row, which means (in qwerty):
+
+- Hold `z` for ctrl, `x` for alt, `c` for win/mod, `v` for a numpad under the right hand
+- Hold `/` for ctrl, `.` for alt, `,` for win/mod, `m` for symbols under left hand
+- Hold space for vim-like direction keys
+- Caps is backspace
+
+Mod + grave changes keyboard layout. But - I keep `colemak_dh_ortho` as my default, and dwm is configured for that. So I'm now realizing how few people will actually want to run this script. Oh well...
