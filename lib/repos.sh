@@ -6,7 +6,7 @@ GITHUB_USER="drewherron"
 
 setup_wm_repos() {
     echo ""
-    read -p "Clone and build window manager tools (dwm, st, dmenu, slstatus)? This requires building from source. (y/N): " -n 1 -r
+    read -p "Clone and build window manager tools (dwm, st, dmenu, slstatus, slock)? This requires building from source. (y/N): " -n 1 -r
     echo ""
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         echo "Skipping window manager setup."
@@ -17,7 +17,7 @@ setup_wm_repos() {
     mkdir -p ~/src
     cd ~/src
 
-    local wm_repos=("dwm" "st" "dmenu" "slstatus")
+    local wm_repos=("dwm" "st" "dmenu" "slstatus" "slock")
 
     for repo in "${wm_repos[@]}"; do
         if [ ! -d "$repo" ]; then
