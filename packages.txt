@@ -26,14 +26,16 @@ emacsclient
 
 # Shell & CLI Tools
 zsh
+zsh-completions
 tmux
 htop
 btop
+fastfetch
 tree
 xclip
 bat
-pass
 trash-cli
+mc
 
 # X11 & Window Manager Dependencies
 libX11-devel
@@ -51,10 +53,14 @@ lxappearance
 dunst
 scrot
 
-# Graphics & Media
+# Graphics
 gimp
 ImageMagick
+
+# Audio
 alsa-lib-devel
+pavucontrol
+pactl
 
 # Document Processing
 texlive
@@ -62,18 +68,20 @@ texlive-latex
 texlive-luatex
 texlive-collection-basic
 texlive-collection-latexrecommended
+texlive-fontawesome5
+texlive-tex-gyre
+texlive-preprint
+lualatex
 liberation-fonts
 libreoffice
 zathura
+zathura-plugins-all
+pandoc
 
 # System & Boot Customization
 plymouth
 plymouth-theme-spinner
 plymouth-scripts
-gnupg
-syncthing
-baobab
-cmatrix
 
 # Containers & Virtualization
 docker
@@ -84,3 +92,21 @@ qemu-kvm
 # Database
 postgresql
 postgresql-server
+
+# Security & Encryption
+gnupg
+pass
+passmenu
+
+# File Management
+thunar
+syncthing
+
+# System Utilities
+baobab
+upower
+
+# Other
+cmatrix
+asciiquarium
+perl-Term-Animation
