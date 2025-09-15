@@ -299,14 +299,14 @@ setup_keyboard() {
 
 setup_trackpad() {
     echo ""
-    read -p "Configure trackpad with natural scrolling? (y/N): " -n 1 -r
+    read -p "Configure trackpad with natural scrolling and tap-to-click? (y/N): " -n 1 -r
     echo ""
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         echo "Skipping trackpad configuration."
         return
     fi
 
-    echo "Configuring trackpad with natural scrolling..."
+    echo "Configuring trackpad with natural scrolling and tap-to-click..."
 
     # Install xinput if not already installed
     if ! command -v xinput &> /dev/null; then
@@ -341,6 +341,7 @@ Section "InputClass"
         MatchDevicePath "/dev/input/event*"
         Driver "libinput"
         Option "NaturalScrolling" "true"
+        Option "Tapping" "true"
 EndSection
 
 Section "InputClass"
@@ -358,18 +359,27 @@ Section "InputClass"
 EndSection
 EOF
     else
-        # Check if natural scrolling is already configured
-        if grep -q "NaturalScrolling.*true" "$libinput_conf"; then
-            echo "Natural scrolling already configured in $libinput_conf"
+        # Check if trackpad options are already configured
+        if grep -q "NaturalScrolling.*true" "$libinput_conf" && grep -q "Tapping.*true" "$libinput_conf"; then
+            echo "Trackpad options already configured in $libinput_conf"
         else
-            echo "Adding natural scrolling to existing libinput configuration..."
-            sudo sed -i '/MatchIsTouchpad.*on/,/EndSection/ s/Driver "libinput"/Driver "libinput"\n        Option "NaturalScrolling" "true"/' "$libinput_conf"
+            echo "Adding trackpad options to existing libinput configuration..."
+            # Add natural scrolling if not present
+            if ! grep -q "NaturalScrolling.*true" "$libinput_conf"; then
+                sudo sed -i '/MatchIsTouchpad.*on/,/EndSection/ s/Driver "libinput"/Driver "libinput"\n        Option "NaturalScrolling" "true"/' "$libinput_conf"
+            fi
+            # Add tapping if not present
+            if ! grep -q "Tapping.*true" "$libinput_conf"; then
+                sudo sed -i '/MatchIsTouchpad.*on/,/EndSection/ s/Driver "libinput"/Driver "libinput"\n        Option "Tapping" "true"/' "$libinput_conf"
+            fi
         fi
     fi
 
-    echo "✓ Trackpad configured with natural scrolling"
-    echo "Note: Natural scrolling will be active after X11 restart or reboot."
-    echo "To apply immediately, run: xinput set-prop \"\$(xinput list --name-only | grep -i touchpad)\" \"libinput Natural Scrolling Enabled\" 1"
+    echo "✓ Trackpad configured with natural scrolling and tap-to-click"
+    echo "Note: Settings will be active after X11 restart or reboot."
+    echo "To apply immediately, run:"
+    echo "  xinput set-prop \"\$(xinput list --name-only | grep -i touchpad)\" \"libinput Natural Scrolling Enabled\" 1"
+    echo "  xinput set-prop \"\$(xinput list --name-only | grep -i touchpad)\" \"libinput Tapping Enabled\" 1"
 }
 
 setup_dark_theme() {
