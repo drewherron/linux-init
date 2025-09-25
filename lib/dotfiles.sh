@@ -28,7 +28,7 @@ setup_dotfiles() {
             "bash"
             "bin"
             "dwm"
-	        "emacs"
+            "emacs"
             "face"
             "git"
             "lf"
@@ -67,6 +67,14 @@ setup_dotfiles() {
         for dir in "${dotfiles_to_stow[@]}"; do
             if [ -d "$dir" ]; then
                 echo "Processing $dir..."
+
+                # Special handling for wallpaper - run setup script first
+                if [ "$dir" = "wallpaper" ] && [ -f "$dir/Pictures/create_image_dirs.sh" ]; then
+                    echo "Running picture directory setup script..."
+                    cd "$dir/Pictures"
+                    bash create_image_dirs.sh
+                    cd ~/dotfiles
+                fi
 
                 # Find all files in the dotfiles directory that would be linked
                 while IFS= read -r -d '' file; do
