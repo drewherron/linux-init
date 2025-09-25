@@ -232,7 +232,7 @@ setup_lightdm() {
 
     # Copy assets and link configuration if dotfiles repo is available
     local greeter_config="$HOME/dotfiles/lightdm/greeter/lightdm-gtk-greeter.conf"
-    local wallpaper_source="$HOME/Pictures/wallpaper/other/shotei-takahashi-starlight.night.jpg"
+    local wallpaper_source="$HOME/Pictures/gallery/wallpaper/other/shotei-takahashi-starlight.night.jpg"
     
     # Copy wallpaper and user image to system-accessible locations
     if [ -f "$wallpaper_source" ]; then
@@ -403,7 +403,7 @@ setup_plymouth() {
     local wallpaper_source="$HOME/dotfiles/wallpaper/Pictures/wallpaper/other/penguins-pc-1920x1080.jpeg"
     if [ ! -f "$wallpaper_source" ]; then
         # Try alternative location
-        wallpaper_source="$HOME/Pictures/wallpaper/other/penguins-pc-1920x1080.jpeg"
+        wallpaper_source="$HOME/Pictures/gallery/wallpaper/other/penguins-pc-1920x1080.jpeg"
         if [ ! -f "$wallpaper_source" ]; then
             echo "Warning: Background image not found. Skipping Plymouth customization."
             return
