@@ -7,6 +7,7 @@ make
 cmake
 gdb
 git
+git-delta
 stow
 
 # Programming Languages & Runtimes
