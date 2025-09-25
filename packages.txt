@@ -18,6 +18,8 @@ python3-devel
 golang
 stack
 clisp
+rust
+cargo
 
 # Editors & IDEs
 vim
@@ -53,14 +55,18 @@ lxappearance
 dunst
 scrot
 
-# Graphics
+# Multimedia
+mpv
 gimp
 ImageMagick
-
-# Audio
 alsa-lib-devel
 pavucontrol
 pactl
+imlib2
+imlib2-devel
+exiftool
+libexif
+libexif-devel
 
 # Document Processing
 texlive
@@ -77,6 +83,7 @@ libreoffice
 zathura
 zathura-plugins-all
 pandoc
+poppler-utils
 foliate
 
 # System & Boot Customization
