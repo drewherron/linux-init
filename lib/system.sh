@@ -158,7 +158,12 @@ setup_zsh() {
     fi
 
     # Get the path to zsh
-    local zsh_path=$(which zsh)
+    local zsh_path=$(command -v zsh)
+
+    if [[ -z "$zsh_path" ]]; then
+        echo "Error: Could not find zsh path"
+        return 1
+    fi
 
     # Check if zsh is already the default shell
     if [[ "$SHELL" == "$zsh_path" ]]; then
@@ -166,12 +171,21 @@ setup_zsh() {
         return
     fi
 
+    # Ensure zsh is in /etc/shells
+    if ! grep -qx "$zsh_path" /etc/shells; then
+        echo "Adding zsh to /etc/shells..."
+        echo "$zsh_path" | sudo tee -a /etc/shells
+    fi
+
     # Change shell to zsh
     echo "Changing shell to zsh..."
-    chsh -s "$zsh_path"
-
-    echo "✓ Default shell set to zsh"
-    echo "Note: You'll need to log out and back in for the change to take effect."
+    if chsh -s "$zsh_path"; then
+        echo "✓ Default shell set to zsh"
+        echo "Note: You'll need to log out and back in for the change to take effect."
+    else
+        echo "Error: Failed to change shell to zsh. You may need to run 'chsh -s $zsh_path' manually."
+        return 1
+    fi
 }
 
 setup_fonts() {
