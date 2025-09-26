@@ -112,3 +112,26 @@ cleanup_unwanted() {
     echo "✓ Cleanup completed"
 }
 
+setup_flatpak() {
+    echo "Setting up Flatpak and installing applications..."
+
+    # Check if flatpak is installed
+    if ! command -v flatpak &> /dev/null; then
+        echo "Error: flatpak is not installed. Install packages first."
+        return 1
+    fi
+
+    # Add flathub remote if not already added
+    echo "Adding Flathub remote..."
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+    # Install specified applications without prompts
+    echo "Installing Czkawka (duplicate finder)..."
+    flatpak install -y flathub com.github.qarmin.czkawka
+
+    echo "Installing Obsidian..."
+    flatpak install -y flathub md.obsidian.Obsidian
+
+    echo "✓ Flatpak setup completed"
+}
+

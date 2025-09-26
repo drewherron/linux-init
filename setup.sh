@@ -26,6 +26,7 @@ main() {
     make_directories
     update_system
     install_packages
+    setup_flatpak
     setup_repos
     setup_xinitrc
     setup_trackpad
