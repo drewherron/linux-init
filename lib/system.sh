@@ -230,6 +230,11 @@ setup_lightdm() {
 
     echo "Installing and configuring LightDM..."
 
+    # Clean up any previous incomplete setup
+    echo "Cleaning up previous LightDM configuration..."
+    sudo rm -f /usr/share/backgrounds/shotei-takahashi-starlight.night.jpg
+    sudo rm -f /usr/share/pixmaps/user-face.png
+
     # Install LightDM and a greeter
     sudo dnf install -y lightdm lightdm-gtk-greeter
 
@@ -413,8 +418,13 @@ setup_plymouth() {
 
     echo "Customizing Plymouth boot screen..."
 
+    # Clean up any previous incomplete setup
+    echo "Cleaning up previous Plymouth configuration..."
+    sudo rm -rf /usr/share/plymouth/themes/custom-penguins
+    sudo plymouth-set-default-theme -l | grep -q "^spinner$" && sudo plymouth-set-default-theme spinner 2>/dev/null || true
+
     # Check if dotfiles wallpaper directory exists
-    local wallpaper_source="$HOME/dotfiles/wallpaper/Pictures/wallpaper/other/penguins-pc-1920x1080.jpeg"
+    local wallpaper_source="$HOME/dotfiles/wallpaper/Pictures/gallery/wallpaper/other/penguins-pc-1920x1080.jpeg"
     if [ ! -f "$wallpaper_source" ]; then
         # Try alternative location
         wallpaper_source="$HOME/Pictures/gallery/wallpaper/other/penguins-pc-1920x1080.jpeg"
