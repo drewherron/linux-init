@@ -120,3 +120,5 @@ timeshift
 cmatrix
 asciiquarium
 perl-Term-Animation
+jmtpfs
+libmtp-examples
