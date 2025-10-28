@@ -78,6 +78,9 @@ texlive-collection-latexrecommended
 texlive-fontawesome5
 texlive-tex-gyre
 texlive-preprint
+texlive-wrapfig
+texlive-ulem
+texlive-capt-of
 lualatex
 liberation-fonts
 libreoffice
