@@ -289,7 +289,20 @@ setup_keyboard() {
             if [ -f "kmonad-setup.sh" ]; then
                 chmod +x kmonad-setup.sh
                 ./kmonad-setup.sh
-                
+
+                # Install udev rule for stable keyboard symlink.
+                # The kmonad config points at /dev/input/laptop-keyboard so it
+                # survives i8042 unbind/rebind (used to fix occasional dead
+                # trackpoint buttons), which reshuffles serio-N numbers.
+                local udev_rule="/etc/udev/rules.d/99-kmonad-keyboard.rules"
+                echo "Installing udev rule for stable keyboard symlink..."
+                sudo tee "$udev_rule" >/dev/null <<'EOF'
+SUBSYSTEM=="input", ATTRS{name}=="AT Translated Set 2 keyboard", KERNEL=="event*", SYMLINK+="input/laptop-keyboard"
+EOF
+                sudo udevadm control --reload
+                sudo udevadm trigger --subsystem-match=input --action=add
+                echo "✓ Keyboard udev rule installed"
+
                 # Enable and start kmonad systemd user services if they exist
                 if [ -d "$HOME/.config/systemd/user" ]; then
                     echo "Checking for kmonad systemd services..."
