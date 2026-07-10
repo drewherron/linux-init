@@ -8,7 +8,9 @@ cmake
 gdb
 git
 git-delta
+git-filter-repo
 stow
+rpm-build
 
 # Programming Languages & Runtimes
 nodejs
@@ -22,11 +24,14 @@ stack
 clisp
 rust
 cargo
+R
+uvicorn
 
 # Editors & IDEs
 vim
 emacs-gtk+x11
 emacsclient
+mg
 
 # Shell & CLI Tools
 zsh
@@ -54,8 +59,10 @@ xset
 xrandr
 arandr
 lxappearance
+adw-gtk3-theme
 dunst
 scrot
+xev
 
 # Multimedia
 mpv
@@ -69,6 +76,15 @@ imlib2-devel
 exiftool
 libexif
 libexif-devel
+opustags
+sxiv
+mp4info
+jellyfin
+jellyfin-server
+jellyfin-web
+radiotray-ng
+tuxpaint
+tuxpaint-stamps
 
 # Document Processing
 texlive
@@ -82,6 +98,10 @@ texlive-preprint
 texlive-wrapfig
 texlive-ulem
 texlive-capt-of
+texlive-datatool
+texlive-expex
+texlive-gb4e
+texlive-tcolorbox
 lualatex
 liberation-fonts
 libreoffice
@@ -90,6 +110,7 @@ zathura-plugins-all
 pandoc
 poppler-utils
 foliate
+calibre
 
 # System & Boot Customization
 plymouth
@@ -105,6 +126,8 @@ qemu-kvm
 # Database
 postgresql
 postgresql-server
+sqlite
+sqlite3
 
 # Security & Encryption
 gnupg
@@ -114,6 +137,10 @@ passmenu
 # File Management
 thunar
 syncthing
+qbittorrent
+jmtpfs
+libmtp
+libmtp-examples
 
 # System Utilities
 baobab
@@ -121,10 +148,12 @@ upower
 snapper
 btrfs-assistant
 python3-dnf-plugin-snapper
+flatpak
+snapd
+iostat
+avahi-browse
 
 # Other
 cmatrix
 asciiquarium
 perl-Term-Animation
-jmtpfs
-libmtp-examples
