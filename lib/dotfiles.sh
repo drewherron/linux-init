@@ -45,6 +45,7 @@ setup_dotfiles() {
             "zathura"
             "zsh"
             "kmonad"
+            "gtk"
         )
 
         # Directories that need --no-folding
@@ -53,6 +54,7 @@ setup_dotfiles() {
 	    "emacs"
             "syncthing"
             "lightline"
+            "dwm"
         )
 
         # Directories that need --no-folding --override (for absolute symlinks)
