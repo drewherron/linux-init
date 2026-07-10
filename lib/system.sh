@@ -414,12 +414,6 @@ EOF
     echo "  xinput set-prop \"\$(xinput list --name-only | grep -i touchpad)\" \"libinput Tapping Enabled\" 1"
 }
 
-setup_dark_theme() {
-    echo "Setting system theme to dark mode..."
-    gsettings set org.gnome.desktop.interface color-scheme prefer-dark
-    echo "✓ Dark theme enabled"
-}
-
 setup_plymouth() {
     echo ""
     read -p "Customize Plymouth boot/LUKS screen with custom background? (y/N): " -n 1 -r
